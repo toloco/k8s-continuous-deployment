@@ -1,0 +1,34 @@
+apiVersion: extensions/v1beta1
+kind: Deployment
+metadata:
+  name: athena-db
+spec:
+  replicas: 1
+  selector: {"matchLabels": {"app": athena-db}}
+  template:
+    metadata: {"labels": {"app": athena-db}}
+    spec:
+
+      containers:
+      - name: athena-db
+        image: postgres:12.2
+        imagePullPolicy: Always
+        ports: [{containerPort: 5432, name: "postgres"}]
+        env: [
+          {name: "POSTGRES_DB", value: "athena"},
+          {name: "POSTGRES_PASSWORD", valueFrom: {secretKeyRef: {name: "db-user-pass", key: "password"}}},
+          {name: "POSTGRES_USER", valueFrom: {secretKeyRef: {name: "db-user-pass", key: "user"}}}
+        ]
+        resources:
+          requests: {"memory": "512Mi", "cpu": "100m"}
+          limits: {"memory": "512Mi", "cpu": "100m"}
+        volumeMounts:
+          - mountPath: /var/lib/postgresql
+            name: mypvc
+      volumes:
+       - name: mypvc
+         persistentVolumeClaim:
+           claimName: athena-db-pvc
+           readOnly: false
+
+

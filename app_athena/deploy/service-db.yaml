@@ -1,0 +1,12 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: athena-db
+spec:
+  selector:
+    app: athena-db
+  ports:
+    - protocol: TCP
+      port: 5432
+      targetPort: 5432
+      name: postgres

@@ -1,0 +1,11 @@
+kind: PersistentVolumeClaim
+apiVersion: v1
+metadata:
+  name: athena-db-pvc
+spec:
+  accessModes:
+  - ReadWriteOnce
+  storageClassName: singlewriter-standard
+  resources:
+    requests:
+      storage: 6Gi

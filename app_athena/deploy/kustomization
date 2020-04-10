@@ -1,0 +1,11 @@
+secretGenerator:
+- name: db-user-pass
+  literals:
+  - user=admin
+  - password=secret
+generatorOptions:
+  disableNameSuffixHash: true
+  labels:
+    type: generated
+  annotations:
+    note: generated

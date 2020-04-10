@@ -1,0 +1,26 @@
+apiVersion: extensions/v1beta1
+kind: Deployment
+metadata:
+  name: kubernetes-nginx
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: kubernetes-nginx
+  template:
+    metadata:
+      labels:
+        app: kubernetes-nginx
+    spec:
+      containers:
+      - name: kubernetes-nginx
+        image: gcr.io/tolo-kubernetes/app_nginx
+        imagePullPolicy: Always
+        ports: [{containerPort: 80, name: "http"}]
+        resources:
+          requests:
+            memory: "300Mi"
+            cpu: "100m"
+          limits:
+            memory: "512Mi"
+            cpu: "200m"
