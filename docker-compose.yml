@@ -1,0 +1,89 @@
+version: "3.5"
+volumes:
+  postgres:
+  rethinkdb:
+services:  
+#### DB ########################################################################
+  athena-db:
+    image: "postgres:12.2"
+    ports:
+      - "5432:5432"
+    environment:
+      - POSTGRES_PASSWORD=change-me-in-prod-you-lazy
+      - POSTGRES_USER=change-me-in-prod-you-lazy
+      - POSTGRES_DB=athena
+    volumes:  
+      - postgres:/var/lib/postgresql/data
+
+  prometheus-db:
+    image: "rethinkdb:2.4.0"
+    ports:
+      - "28015:28015"
+    volumes:
+      - rethinkdb:/data
+
+#### Nginx router ##############################################################
+  app_nginx:
+    build:
+      context: app_nginx
+      dockerfile: build/Dockerfile
+    image: k8s/app_nginx
+    ports:
+      - 80:80
+    environment:
+      - ATHENA_SERVICE_HOST=app_prometheus
+      - PROMETHEUS_SERVICE_HOST=app_athena
+    depends_on:
+      - app_prometheus
+      - app_athena
+    ## Debug nginx
+    # volumes:  
+    #   - ./web/nginx.conf:/etc/nginx/conf.d/app.conf
+
+#### APIs servers ##############################################################
+  app_prometheus:
+    build:
+      context: app_prometheus
+      dockerfile: build/Dockerfile
+    image: k8s/app_prometheus
+    volumes:  
+      - ./app_prometheus/src:/code/
+    ports:
+      - 8000:8000
+    environment:
+      - APP_NAME=Prometheus
+      - RETHINKDB_HOST=prometheus-db
+      - RETHINKDB_PORT=28015
+      - RETHINKDB_DB=k8s_test_db
+    depends_on:
+      - prometheus-db
+
+  app_athena:
+    build:
+      context: app_athena
+      dockerfile: build/Dockerfile
+    image: k8s/app_athena
+    volumes:  
+      - ./app_athena/src:/code/
+    environment:
+      - APP_NAME=Athena
+      - POSTGRES_PASSWORD=change-me-in-prod-you-lazy
+      - POSTGRES_USER=change-me-in-prod-you-lazy
+      - POSTGRES_DB=athena
+      - ATHENA_DB_SERVICE_HOST=athena-db
+      - POSTGRES_PORT=5432
+    depends_on:
+      - athena-db
+
+  app_prediction:
+    build:
+      context: app_prediction
+      dockerfile: build/Dockerfile
+    image: k8s/app_prediction
+    volumes:  
+      - ./app_prediction/src:/code/
+    ports:
+      - 8000:8000
+    environment:
+      - APP_NAME=prediction
+

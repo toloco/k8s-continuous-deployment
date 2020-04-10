@@ -1,0 +1,41 @@
+apiVersion: extensions/v1beta1
+kind: Deployment
+metadata:
+  name: prometheus-api
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: prometheus-api
+  template:
+    metadata:
+      labels:
+        app: prometheus-api
+    spec:
+      containers:
+      - name: prometheus-api
+        image: gcr.io/tolo-kubernetes/app_prometheus
+        imagePullPolicy: Always
+        ports: [{containerPort: 8000, name: "app-http"}]
+        env: [
+          {name: "APP_NAME", value: "prometheus"},
+        ]
+        resources:
+          requests:
+            memory: "300Mi"
+            cpu: "100m"
+          limits:
+            memory: "700Mi"
+            cpu: "200m"
+        # readinessProbe:
+        #   httpGet:
+        #     path: /ready
+        #     port: app-http
+        #   initialDelaySeconds: 5
+        #   periodSeconds: 30
+        livenessProbe:
+          httpGet:
+            path: /ping
+            port: app-http
+          initialDelaySeconds: 5
+          periodSeconds: 30

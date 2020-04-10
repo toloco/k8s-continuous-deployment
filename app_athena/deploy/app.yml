@@ -1,0 +1,38 @@
+apiVersion: extensions/v1beta1
+kind: Deployment
+metadata:
+  name: athena-api
+spec:
+  replicas: 1
+  selector: {"matchLabels": {"app": athena-api}}
+  template:
+    metadata: {"labels": {"app": athena-api}}
+    spec:
+      containers:
+      - name: athena-api
+        image: gcr.io/tolo-kubernetes/app_athena
+        imagePullPolicy: Always
+        ports: [{containerPort: 8000, name: "app-http"}]
+        env: [
+          {name: "POSTGRES_PASSWORD", value: "http://XXX"},
+          {name: "POSTGRES_USER", value: "athena"},
+          {name: "POSTGRES_DB", value: "athena"},
+          {name: "APP_NAME", value: "athena"},
+          {name: "GUNICORN_PROCESS", value: "10"},
+
+        ]
+        resources:
+          requests: {"memory": "512Mi", "cpu": "100m"}
+          limits: {"memory": "512Mi", "cpu": "100m"}
+        readinessProbe:
+          httpGet:
+            path: /ready
+            port: app-http
+          initialDelaySeconds: 5
+          periodSeconds: 30
+        livenessProbe:
+          httpGet:
+            path: /ping
+            port: app-http
+          initialDelaySeconds: 5
+          periodSeconds: 30
