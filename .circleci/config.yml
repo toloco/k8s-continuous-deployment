@@ -1,0 +1,21 @@
+version: 2.1
+
+orbs:
+  gcp-cli: circleci/gcp-cli@1.8.3
+
+jobs:
+  build-and-test:
+    machine: true
+    executor: gcp-cli/default
+    steps:
+      - checkout
+      - setup_remote_docker:
+          docker_layer_caching: true
+
+      - run:
+          command: make build
+
+workflows:
+  main:
+    jobs:
+      - build-and-test
