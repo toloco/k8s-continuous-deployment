@@ -1,0 +1,48 @@
+version: 2
+jobs:
+  build:
+    working_directory: /app
+    docker:
+      - image: docker:git
+    steps:
+      - checkout
+      - setup_remote_docker
+      # - restore_cache:
+      #     keys:
+      #       - v1-{{ .Branch }}
+      #     paths:
+      #       - /caches/app.tar
+      # - run:
+      #     name: Load Docker image layer cache
+      #     command: |
+      #       set +o pipefail
+      #       docker load -i /caches/app.tar | true
+      - run:
+          name: Install deps
+          command: |
+            export PATH=/root/google-cloud-sdk/bin:$PATH
+            sh .circleci/install_deps.sh
+            make get-gcp-credentials
+            make check
+
+      # - save_cache:
+      #     key: v1-repo-{{ .Environment.CIRCLE_SHA1 }}
+      #     paths:
+      #       - /
+
+      - run:
+          name: Build and Push Docker images to GCP
+          command: |
+            export PATH=/root/google-cloud-sdk/bin:$PATH 
+            make get-gcp-credentials
+            make push
+      # - run:
+      #     name: Save Docker image layer cache
+      #     command: |
+      #       mkdir -p /caches
+      #       docker save -o /caches/app.tar app
+      # - save_cache:
+      #     key: v1-{{ .Branch }}-{{ epoch }}
+      #     paths:
+      #       - /caches/app.tar
+

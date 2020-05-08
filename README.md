@@ -22,6 +22,12 @@ Install instructions follow https://docs.docker.com/engine/install/
 Install instructions follow https://docs.docker.com/compose/install/
 
 
+#### [Optional] Install CircleCI devtools
+curl -fLSs https://raw.githubusercontent.com/CircleCI-Public/circleci-cli/master/install.sh | bash
+or with OSX brew `brew install circleci`
+And then setup your credentials `circleci setup`
+
+
 ### 3. Settings
 For a simpler configuration create a file in your user directory called `.kube-test.rc` with 
 the following variables setup.
