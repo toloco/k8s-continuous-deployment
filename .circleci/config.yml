@@ -22,7 +22,6 @@ jobs:
           command: |
             export PATH=/root/google-cloud-sdk/bin:$PATH
             sh .circleci/install_deps.sh
-            make get-gcp-credentials
             make check
 
       # - save_cache:
@@ -34,7 +33,6 @@ jobs:
           name: Build and Push Docker images to GCP
           command: |
             export PATH=/root/google-cloud-sdk/bin:$PATH 
-            make get-gcp-credentials
             make push
       # - run:
       #     name: Save Docker image layer cache

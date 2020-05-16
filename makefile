@@ -6,6 +6,7 @@
 K8S_NAMESPACE ?= $(K8S_DEFAULT_NAMESPACE)
 CircleCI ?= false
 
+
 ################################################################################
 # Makefile internals
 ################################################################################
@@ -23,19 +24,6 @@ help:
 	@grep -E '^[a-zA-Z_-]+:.*?## .*$$' makefile | sort | \
 	awk 'BEGIN {FS = ":.*?## "}; {printf "\033[36m%-10s\033[0m %s\n", $$1, $$2}'
 
---set-context: # Check if gcloud and kubectl are correctly logged in 
-	@if ! find .context -mmin -15 -type f 2> /dev/null |  egrep '.*' > /dev/null; then\
-		gcloud config set project $(GCP_PROJ_ID) > /dev/null && \
-			printf "$$CC $(CCGREEN) OK$(CCEND)\n";\
-		gcloud config set compute/zone $(GCP_LOCATION) > /dev/null && \
-			printf "$$CC $(CCGREEN) OK$(CCEND)\n";\
-		gcloud container clusters get-credentials $(GCP_PROJ_ID) > /dev/null && \
-			printf "$$CC $(CCGREEN) OK$(CCEND)\n";\
-		gcloud beta container clusters update  $(GCP_PROJ_ID) \
-		--update-addons=GcePersistentDiskCsiDriver=ENABLED > /dev/null && \
-			printf '\e[A\e[K' && printf "$$CC $(CCGREEN) OK$(CCEND)\n";\
-		echo "" > .context;\
-	fi
 
 ################################################################################
 namespace: --set-context ## Deploy namespaces
@@ -69,7 +57,7 @@ push: build --set-context  ## Push docker images to GCP registry
 	done
 
 	# List images
-# 	gcloud container images list --repository $(GCP_HOSTNAME)/$(GCP_PROJ_ID)
+	gcloud container images list --repository $(GCP_HOSTNAME)/$(GCP_PROJ_ID)
 
 ################################################################################
 COMMANDS := docker kubectl gcloud
@@ -85,6 +73,30 @@ check: --set-context ## Checks you can run the makefile
     	printf "Can't create deployments $(CCRED)ERROR$(CCEND)\n";\
     fi
 
+--set-context: # Check if gcloud and kubectl are correctly logged in 
+ifeq ($(CircleCI),true)
+	echo "Login"
+	echo $(GCP_CA_JSON) | base64 -d > key.json && \
+	gcloud auth activate-service-account \
+    	"$(GCP_USER)@$(GCP_PROJ_ID).iam.gserviceaccount.com" --key-file=key.json && \
+    rm key.json
+	echo $(GCP_CA_JSON) | base64 -d  | docker login -u _json_key \
+	--password-stdin https://$(GCP_HOSTNAME)
+endif
+	@if ! find .context -mmin -15 -type f 2> /dev/null |  egrep '.*' > /dev/null; then\
+		gcloud config set project $(GCP_PROJ_ID) > /dev/null && \
+		printf "$$CC $(CCGREEN) OK$(CCEND)\n" ;\
+		gcloud config set compute/zone $(GCP_LOCATION) > /dev/null && \
+		printf "$$CC $(CCGREEN) OK$(CCEND)\n" ;\
+		gcloud container clusters get-credentials $(GCP_PROJ_ID) > /dev/null && \
+		printf "$$CC $(CCGREEN) OK$(CCEND)\n" ;\
+		gcloud beta container clusters update  $(GCP_PROJ_ID) \
+		--update-addons=GcePersistentDiskCsiDriver=ENABLED > /dev/null && \
+		printf '\e[A\e[K' && printf "$$CC $(CCGREEN) OK$(CCEND)\n" ;\
+		echo "" > .context;\
+	fi
+
+################################################################################
 local-ci-exec:  ## Run CircleCI locally
 	@circleci config validate
 	@circleci local execute --job build \
@@ -95,27 +107,3 @@ local-ci-exec:  ## Run CircleCI locally
 	 -e GCP_LOCATION=$(GCP_LOCATION) \
 	 -e GCP_HOSTNAME=$(GCP_HOSTNAME) \
 	 -e GCP_PROJ_ID=$(GCP_PROJ_ID) \
-
-
-get-gcp-credentials:
-	@echo $(GCP_CA_JSON) | base64 -d > key.json && \
-	gcloud auth activate-service-account \
-    	"$(GCP_USER)@$(GCP_PROJ_ID).iam.gserviceaccount.com" --key-file=key.json
-	@echo $(GCP_CA_JSON) | base64 -d  | docker login -u _json_key --password-stdin https://$(GCP_HOSTNAME)
-	@gcloud config set project $(GCP_PROJ_ID) > /dev/null && \
-	printf "$$CC $(CCGREEN) OK$(CCEND)\n"
-	@gcloud config set compute/zone $(GCP_LOCATION) > /dev/null && \
-	printf "$$CC $(CCGREEN) OK$(CCEND)\n"
-	@gcloud container clusters get-credentials $(GCP_PROJ_ID) > /dev/null && \
-	printf "$$CC $(CCGREEN) OK$(CCEND)\n"
-	@gcloud beta container clusters update  $(GCP_PROJ_ID) \
-	--update-addons=GcePersistentDiskCsiDriver=ENABLED > /dev/null && \
-	printf '\e[A\e[K' && printf "$$CC $(CCGREEN) OK$(CCEND)\n"
-	@echo "" > .context
-	@rm key.json
-
-
-# 	@gcloud iam service-accounts keys create /tmp/key.json \
-# 	--iam-account "$(GCP_USER)@$(GCP_PROJ_ID).iam.gserviceaccount.com"
-# 	base64  /tmp/key.json
-

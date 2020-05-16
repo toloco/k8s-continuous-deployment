@@ -17,9 +17,9 @@ curl -sSL https://sdk.cloud.google.com -o gcp_installer.bash
 bash gcp_installer.bash --disable-prompts > /dev/null
 
 
-echo $(GCP_CA_JSON) | base64 -d > key.json && \
+echo $GCP_CA_JSON | base64 -d > key.json && \
 gcloud auth activate-service-account \
-    "$(GCP_USER)@$(GCP_PROJ_ID).iam.gserviceaccount.com" --key-file=key.json && \
+    "$GCP_USER@$GCP_PROJ_ID.iam.gserviceaccount.com" --key-file=key.json && \
 rm key.json
 
 yes Y | gcloud auth configure-docker  --quiet > /dev/null

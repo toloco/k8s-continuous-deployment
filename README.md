@@ -37,13 +37,18 @@ K8S_DEFAULT_NAMESPACE=dev
 GCP_HOSTNAME=gcr.io
 GCP_PROJ_ID=<GCP Project id>
 GCP_LOCATION=<gcp location>
-
+GCP_CA_JSON=<GCP service token>
+GCP_USER=<GCP service user>
 ```
+
+
 * **K8S_NAMESPACES** List of desired namespaces
 * **K8S_DEFAULT_NAMESPACE** Default namespace if namespace is not informed
 * **GCP_HOSTNAME**
 * **GCP_PROJ_ID**
 * **GCP_LOCATION**
+* **GCP_CA_JSON** Base64 encoded GCP Json certificate for service user
+* **GCP_USER** GCP service user e.g. circleci-sa
 
 
 After the steps, simply check the installation with  `make check`
@@ -90,7 +95,8 @@ And then configure **kubectl** with the desired cluster credentials
 - [ ] Frontend
 - [X] Autocreate secrets
 - [ ] Configmaps
-- [ ] Setup CircleCI
+- [X] Setup CircleCI
+- [ ] CircleCI build cache
 - [ ] Github triggers - circleCI
 - [X] Delete and recreate cluster
 - [X] Check deploy credentials periodically
