@@ -44,3 +44,10 @@ jobs:
       #     paths:
       #       - /caches/app.tar
 
+
+      - run:
+          name: Deploy
+          type: approval
+          command: |
+            export PATH=/root/google-cloud-sdk/bin:$PATH 
+            make push

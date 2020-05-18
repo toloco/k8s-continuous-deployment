@@ -1,3 +1,11 @@
+[![GitHub issues](https://img.shields.io/github/issues/toloco/k8s-continuous-deployment?style=flat-square)](https://github.com/toloco/k8s-continuous-deployment/issues)
+
+
+[![Kubernetes](https://img.shields.io/static/v1?label=Kubernetes&color=blue&style=flat-square&logo=kubernetes)](https://kubernetes.io/)
+
+
+
+
 Boilerplate for Continuous deployment in Kubernetes
 ===================================================
 Boilerplate for continuous deployment in Kubernetes on GCP using Github and CircleCI
@@ -41,7 +49,6 @@ GCP_CA_JSON=<GCP service token>
 GCP_USER=<GCP service user>
 ```
 
-
 * **K8S_NAMESPACES** List of desired namespaces
 * **K8S_DEFAULT_NAMESPACE** Default namespace if namespace is not informed
 * **GCP_HOSTNAME**
@@ -56,7 +63,7 @@ After the steps, simply check the installation with  `make check`
 
 ## How to use
 `K8S_NAMESPACE=stag make deploy`
-
+...
 
 ## Folder structure
 All folders prefixed by **app_** are considered Kubernetes Apps, which for an easier management
@@ -64,7 +71,7 @@ forces to have a particular structure.
 app_xxx
   |_> build: all dockerfiles
   |_> deploy: all kubernetes configuration files, including databases, services, etc
-
+...
 
 
 ## Troubleshouting
@@ -76,6 +83,9 @@ Running `kubectl get all` and getting this error:
 Use `gcloud container clusters list` to get the list of clusters available at your GCP account
 And then configure **kubectl** with the desired cluster credentials
 `gcloud container clusters get-credentials <CLUSTER NAME> --zone <ZONE>`
+
+
+
 
 ## TODO:
 - [X] Create multiple services connected with nginx
