@@ -7,6 +7,8 @@ COPY index.html /app/index.html
 RUN rm -rf /etc/nginx/conf.d
 COPY nginx.conf /etc/nginx/conf.d/app.conf
 COPY run.sh /app/run.sh
+COPY test /app/test
+ENV PATH=/app:$PATH
 # RUN chown -R nobody /etc/nginx /app
 
 # USER nobody

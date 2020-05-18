@@ -1,9 +1,9 @@
 [![GitHub issues](https://img.shields.io/github/issues/toloco/k8s-continuous-deployment?style=flat-square)](https://github.com/toloco/k8s-continuous-deployment/issues)
 
 
-[![Kubernetes](https://img.shields.io/static/v1?label=Kubernetes&color=blue&style=flat-square&logo=kubernetes)](https://kubernetes.io/)
+<!-- [![Kubernetes](https://img.shields.io/static/v1?label=Kubernetes&color=blue&style=flat-square&logo=kubernetes)](https://kubernetes.io/)
 
-
+ -->
 
 
 Boilerplate for Continuous deployment in Kubernetes

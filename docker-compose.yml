@@ -29,7 +29,7 @@ services:
   app_nginx:
     build:
       context: app_nginx
-      dockerfile: build/Dockerfile
+      dockerfile: build/app.Dockerfile
     image: k8s/app_nginx
     ports:
       - 80:80
@@ -47,7 +47,7 @@ services:
   app_prometheus:
     build:
       context: app_prometheus
-      dockerfile: build/Dockerfile
+      dockerfile: build/app.Dockerfile
     image: k8s/app_prometheus
     volumes:  
       - ./app_prometheus/src:/code/
@@ -64,7 +64,7 @@ services:
   app_athena:
     build:
       context: app_athena
-      dockerfile: build/Dockerfile
+      dockerfile: build/app.Dockerfile
     image: k8s/app_athena
     volumes:  
       - ./app_athena/src:/code/
@@ -81,7 +81,7 @@ services:
   app_prediction:
     build:
       context: app_prediction
-      dockerfile: build/Dockerfile
+      dockerfile: build/app.Dockerfile
     image: k8s/app_prediction
     volumes:  
       - ./app_prediction/src:/code/
@@ -89,4 +89,3 @@ services:
       - 8000:8000
     environment:
       - APP_NAME=prediction
-
