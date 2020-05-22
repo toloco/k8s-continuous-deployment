@@ -13,10 +13,10 @@ CircleCI ?= false
 # Kube command with namespace
 kube := kubectl -n $(K8S_NAMESPACE)
 
-CCRED := \e[31m
+CCRED    := \e[31m
 CCYELLOW := \e[33m
-CCGREEN := \e[92m
-CCEND := \e[0m
+CCGREEN  := \e[92m
+CCEND    := \e[0m
 
 .PHONY: help
 
@@ -24,9 +24,22 @@ help:
 	@grep -E '^[a-zA-Z_-]+:.*?## .*$$' makefile | sort | \
 	awk 'BEGIN {FS = ":.*?## "}; {printf "\033[36m%-10s\033[0m %s\n", $$1, $$2}'
 
-
 ################################################################################
-namespace: --set-context ## Deploy namespaces
+# BASEDIR = ../..
+# SRCDIR = $(BASEDIR)/src
+# MODULES = $(wildcard $(SRCDIR)/*.cpp)
+# OBJS = $(wildcard *.o)
+
+
+APPS = $(wildcard app_*)
+DOCKERFILES = $(wildcard $(APPS)/build/*.Dockerfile)
+
+
+testo: $(APPS)
+# 	@echo $(APPS)
+	@echo $(wildcard $(?)/build/*.Dockerfile)
+
+namespace: --stop-on-circleci --set-context ## Deploy namespaces (only from local env)
 	@for NN in $(K8S_NAMESPACES); do \
 		kubectl apply -f k8s/$$NN/namespace.yml; \
 		kubectl apply -f k8s/$$NN/ -n $$NN; \
@@ -45,11 +58,19 @@ build:  ## Build docker images locally
 	@for APP in $(shell find app_* -mindepth 0 -maxdepth 0 -type d); do \
 		echo "Building images for $$APP";\
 		for DC in ./$$APP/build/*Dockerfile; do \
- 			docker build -f $$DC --tag k8s/$$APP $$APP;\
+				docker build -f $$DC --tag k8s/$$APP $$APP;\
 		done \
 	done
 
-push: build --set-context  ## Push docker images to GCP registry
+test:  ## Run CI tests
+	@for APP in $(shell find app_* -mindepth 0 -maxdepth 0 -type d); do \
+		echo "Run tests for $$APP";\
+		for DC in ./$$APP/build/*Dockerfile; do \
+ 			docker run k8s/$$APP test || exit 1;\
+		done \
+	done
+
+push: build --set-context  ## Build and push docker images to GCP registry
 	@for APP in $(shell find app_* -mindepth 0 -maxdepth 0 -type d); do \
 		echo pushing $$APP; \
 		docker tag k8s/$$APP $(GCP_HOSTNAME)/$(GCP_PROJ_ID)/$$APP; \
@@ -59,7 +80,6 @@ push: build --set-context  ## Push docker images to GCP registry
 	# List images
 	gcloud container images list --repository $(GCP_HOSTNAME)/$(GCP_PROJ_ID)
 
-################################################################################
 COMMANDS := docker kubectl gcloud
 check: --set-context ## Checks you can run the makefile
 	@for CC in $(COMMANDS); do \
@@ -72,7 +92,7 @@ check: --set-context ## Checks you can run the makefile
     else \
     	printf "Can't create deployments $(CCRED)ERROR$(CCEND)\n";\
     fi
-
+################################################################################
 --set-context: # Check if gcloud and kubectl are correctly logged in 
 ifeq ($(CircleCI),true)
 	echo "Login"
@@ -95,9 +115,14 @@ endif
 		printf '\e[A\e[K' && printf "$$CC $(CCGREEN) OK$(CCEND)\n" ;\
 		echo "" > .context;\
 	fi
+--stop-on-circleci:
+ifeq ($(CircleCI),true)
+	@echo "Can't run in CircleCI"
+	@exit 1
+endif
 
 ################################################################################
-local-ci-exec:  ## Run CircleCI locally
+run-local-ci:  ## Run CircleCI locally
 	@circleci config validate
 	@circleci local execute --job build \
 	 -e GCP_CA_JSON=$(GCP_CA_JSON) \
@@ -106,4 +131,4 @@ local-ci-exec:  ## Run CircleCI locally
 	 -e K8S_DEFAULT_NAMESPACE=$(K8S_DEFAULT_NAMESPACE) \
 	 -e GCP_LOCATION=$(GCP_LOCATION) \
 	 -e GCP_HOSTNAME=$(GCP_HOSTNAME) \
-	 -e GCP_PROJ_ID=$(GCP_PROJ_ID) \
+	 -e GCP_PROJ_ID=$(GCP_PROJ_ID)

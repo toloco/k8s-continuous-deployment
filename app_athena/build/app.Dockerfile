@@ -30,3 +30,5 @@ ENV GUNICORN_PROCESS=2
 
 ENTRYPOINT ["/tini", "--"]
 CMD ["/code/run.sh"]
+
+ENV PATH=/code:$PATH
