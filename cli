@@ -3,11 +3,6 @@
 set -e
 export WORKDIR=$(cd $(dirname $0) && pwd)
 
-cli_log() {
-  script_name=${0##*/}
-  timestamp=$(date -u +"%Y-%m-%dT%H:%M:%SZ")
-  echo "== $script_name $timestamp $1"
-}
 
 cli_help() {
   cli_name=${0##*/}
@@ -33,13 +28,29 @@ Commands:
   && echo "ERROR: Can't find $HOME/.kube-test.rc, please create following README.md" \
   && exit 1
 
-source "$HOME/.kube-test.rc"
-source $WORKDIR/ops/defaults.sh
-echo $CircleCI $GCP_LOCATION
+. $WORKDIR/ops/defaults.sh
 
 case "$1" in
   deploy)
     "$WORKDIR/ops/deploy.sh" "$2" 
+    ;;
+  namespace)
+    "$WORKDIR/ops/namespace.sh" "$2" 
+    ;;
+  build)
+    "$WORKDIR/ops/build.sh" "$2" 
+    ;;
+  test)
+    "$WORKDIR/ops/test.sh" "$2" 
+    ;;
+  push)
+    "$WORKDIR/ops/push.sh" "$2" 
+    ;;
+  check)
+    "$WORKDIR/ops/check.sh" "$2" 
+    ;;
+  run-ci)
+    "$WORKDIR/ops/run_ci.sh" "$2" 
     ;;
   *)
     cli_help
