@@ -3,26 +3,32 @@
 # Deploy for master - stag and prod - prod
 
 
-jobs:
-  build:
-    docker:
-      - image: circleci/<language>:<version TAG>
-    steps:
-      - checkout
-      - run: <command>
-  test:
-    docker:
-      - image: circleci/<language>:<version TAG>
-    steps:
-      - checkout
-      - run: <command>
-workflows:
-  version: 2
-  build_and_test:
-    jobs:
-      - build
-      - test
+# jobs:
+#   build:
+#     docker:
+#       - image: circleci/<language>:<version TAG>
+#     steps:
+#       - checkout
+#       - run: <command>
+#   test:
+#     docker:
+#       - image: circleci/<language>:<version TAG>
+#     steps:
+#       - checkout
+#       - run: <command>
+# workflows:
+#   version: 2
+#   build_and_test:
+#     jobs:
+#       - build
+#       - test
 
+ignore_protected_branches: &ignore_protected_branches
+  filters:
+    branches:
+      ignore:
+        - master
+        - prod
 
 
 
@@ -50,7 +56,7 @@ jobs:
           command: |
             export PATH=/root/google-cloud-sdk/bin:$PATH
             sh .circleci/install_deps.sh
-            make check
+            ./cli check
       # - save_cache:
       #     key: v1-repo-{{ .Environment.CIRCLE_SHA1 }}
       #     paths:
@@ -59,17 +65,17 @@ jobs:
           name: Build images
           command: |
             export PATH=/root/google-cloud-sdk/bin:$PATH 
-            make build
+            ./cli build
       - run:
           name: Run tests
           command: |
             export PATH=/root/google-cloud-sdk/bin:$PATH 
-            make test
+            ./cli test
       - run:
           name: Push Docker images to GCP
           command: |
             export PATH=/root/google-cloud-sdk/bin:$PATH 
-            make push
+            ./cli push
       # - run:
       #     name: Save Docker image layer cache
       #     command: |
@@ -79,3 +85,11 @@ jobs:
       #     key: v1-{{ .Branch }}-{{ epoch }}
       #     paths:
       #       - /caches/app.tar
+
+
+workflows:
+  version: 2
+  ci_checks:
+    jobs:
+      - build:
+          <<: *ignore_protected_branches

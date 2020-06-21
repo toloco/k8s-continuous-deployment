@@ -1,0 +1,58 @@
+#!/usr/bin/env bash
+
+set -e
+export WORKDIR=$(cd $(dirname $0) && pwd)
+
+
+cli_help() {
+  cli_name=${0##*/}
+  printf "
+Boilerplate for Continuous deployment in Kubernetes
+Usage: $cli_name [command]
+
+Commands:
+  ${CCGREEN}deploy${CCEND}     Deploy application to Kubernetes
+  ${CCGREEN}namespace${CCEND}  Deploy namespaces (run this only from the local env)
+  ${CCGREEN}build${CCEND}      Build docker images locally
+  ${CCGREEN}test${CCEND}       Run CI tests
+  ${CCGREEN}push${CCEND}       Build and push docker images to GCP registry
+  ${CCGREEN}check${CCEND}      Checks you can run the makefile
+  ${CCGREEN}run-ci${CCEND}     Run CircleCI locally
+  ${CCGREEN}help${CCEND}       Print help
+"
+  exit 1
+}
+
+
+[ ! -f "$HOME/.kube-test.rc" ] \
+  && echo "ERROR: Can't find $HOME/.kube-test.rc, please create following README.md" \
+  && exit 1
+
+. $WORKDIR/ops/defaults.sh
+
+case "$1" in
+  deploy)
+    "$WORKDIR/ops/deploy.sh" "$2" 
+    ;;
+  namespace)
+    "$WORKDIR/ops/namespace.sh" "$2" 
+    ;;
+  build)
+    "$WORKDIR/ops/build.sh" "$2" 
+    ;;
+  test)
+    "$WORKDIR/ops/test.sh" "$2" 
+    ;;
+  push)
+    "$WORKDIR/ops/push.sh" "$2" 
+    ;;
+  check)
+    "$WORKDIR/ops/check.sh" "$2" 
+    ;;
+  run-ci)
+    "$WORKDIR/ops/run_ci.sh" "$2" 
+    ;;
+  *)
+    cli_help
+    ;;
+esac
