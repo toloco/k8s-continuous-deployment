@@ -1,0 +1,35 @@
+on: [push]
+
+jobs:
+  push_to_registry:
+    name: Build, test and push
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check out the repo
+        uses: actions/checkout@v2
+
+      - name: Install
+        shell: bash
+        env:
+          SUPER_SECRET: ${{ secrets.DORO }}
+        run: |
+          echo "$SUPER_SECRET" > $HOME/.kube-test.rc
+          source $HOME/.kube-test.rc
+          echo $GCP_CA_JSON | base64 -d > key.json && \
+          gcloud auth activate-service-account \
+          "$GCP_USER@$GCP_PROJ_ID.iam.gserviceaccount.com" --key-file=key.json && \
+          rm key.json
+          gcloud auth configure-docker  --quiet > /dev/null
+          ./cli check
+      - name: Build
+        shell: bash
+        run: |
+          ./cli build && ./cli push
+      - name: Test
+        shell: bash
+        run: |
+          ./cli test
+      - name: Push
+        shell: bash
+        run: |
+          ./cli push

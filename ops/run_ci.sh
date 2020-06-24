@@ -1,3 +1,6 @@
+#!/usr/bin/env bash
+. $WORKDIR/ops/defaults.sh
+
 circleci config validate
 circleci local execute --job build \
  -e GCP_CA_JSON=$GCP_CA_JSON \

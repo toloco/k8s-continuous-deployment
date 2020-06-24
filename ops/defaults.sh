@@ -1,6 +1,10 @@
 #!/usr/bin/env bash
 
-. $HOME/.kube-test.rc
+
+if [ -f $HOME/.kube-test.rc ];
+then
+    . $HOME/.kube-test.rc
+fi
 
 K8S_NAMESPACE=${K8S_NAMESPACE:-$K8S_DEFAULT_NAMESPACE}
 CircleCI=${CircleCI:=false}

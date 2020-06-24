@@ -1,17 +1,23 @@
 #!/usr/bin/env bash
 . $WORKDIR/ops/defaults.sh
 
-if [[ "true" == $CircleCI ]]; then\
+
+
+if [[ "true" == $CircleCI ]]
+then
     echo $GCP_CA_JSON | base64 -d > key.json && \
     gcloud auth activate-service-account \
         "$GCP_USER@$GCP_PROJ_ID.iam.gserviceaccount.com" --key-file=key.json && \
     rm key.json
     echo $GCP_CA_JSON | base64 -d  | docker login -u _json_key \
-    --password-stdin https://$GCP_HOSTNAME 2> /dev/null
+    --password-stdin https://$GCP_HOSTNAME 2> /dev/
+else
+    gcloud config set account $GCP_USER@$GCP_PROJ_ID.iam.gserviceaccount.com
 fi
 
 
-if ! find .context -mmin -15 -type f 2> /dev/null |  egrep '.*' > /dev/null; then\
+if ! find .context -mmin -15 -type f 2> /dev/null |  egrep '.*' > /dev/null
+then
     gcloud config set project $GCP_PROJ_ID > /dev/null && \
     printf "Set project $CCGREEN OK$CCEND\n" ;\
     gcloud config set compute/zone $GCP_LOCATION > /dev/null && \
