@@ -40,27 +40,14 @@ jobs:
       - image: docker:git
     steps:
       - checkout
-      - setup_remote_docker
-      # - restore_cache:
-      #     keys:
-      #       - v1-{{ .Branch }}
-      #     paths:
-      #       - /caches/app.tar
-      # - run:
-      #     name: Load Docker image layer cache
-      #     command: |
-      #       set +o pipefail
-      #       docker load -i /caches/app.tar | true
+      - setup_remote_docker:
+          # docker_layer_caching: true
       - run:
           name: Install deps
           command: |
             export PATH=/root/google-cloud-sdk/bin:$PATH
             sh .circleci/install_deps.sh
             ./cli check
-      # - save_cache:
-      #     key: v1-repo-{{ .Environment.CIRCLE_SHA1 }}
-      #     paths:
-      #       - /
       - run:
           name: Build images
           command: |
@@ -76,16 +63,6 @@ jobs:
           command: |
             export PATH=/root/google-cloud-sdk/bin:$PATH 
             ./cli push
-      # - run:
-      #     name: Save Docker image layer cache
-      #     command: |
-      #       mkdir -p /caches
-      #       docker save -o /caches/app.tar app
-      # - save_cache:
-      #     key: v1-{{ .Branch }}-{{ epoch }}
-      #     paths:
-      #       - /caches/app.tar
-
 
 workflows:
   version: 2

@@ -1,9 +1,7 @@
-[![GitHub issues](https://img.shields.io/github/issues/toloco/k8s-continuous-deployment?style=flat-square)](https://github.com/toloco/k8s-continuous-deployment/issues)
+[![GitHub issues](https://img.shields.io/github/issues/toloco/k8s-continuous-deployment?style=flat-square&message=ON)](https://github.com/toloco/k8s-continuous-deployment/issues)
 
 
-<!-- [![Kubernetes](https://img.shields.io/static/v1?label=Kubernetes&color=blue&style=flat-square&logo=kubernetes)](https://kubernetes.io/)
-
- -->
+[![Kubernetes](http://img.shields.io/static/v1?label=Kubernetes&color=green&style=flat-square&logo=kubernetes&message=ON)](https://kubernetes.io/)
 
 
 Boilerplate for Continuous deployment in Kubernetes
@@ -14,9 +12,9 @@ Boilerplate for continuous deployment in Kubernetes on GCP using Github and Circ
 The main 2 tools you need to use is `gcloud` to manage GCP services and `kubectl` which
 you need to manage the kubernetes cluster.
 
-Most of the operations are covered by the **makefile**
+Most of the common operations are covered by the `./cli`
 
-### 1. Install management tools
+### 1. Install tools
 #### Install GCP gcloud manager
 Follow GCP instructions https://cloud.google.com/sdk/install
 
@@ -36,7 +34,7 @@ or with OSX brew `brew install circleci`
 And then setup your credentials `circleci setup`
 
 
-### 3. Settings
+### 2. Settings
 For a simpler configuration create a file in your user directory called `.kube-test.rc` with 
 the following variables setup.
 ```
@@ -50,7 +48,7 @@ GCP_USER=<GCP service user>
 ```
 
 * **K8S_NAMESPACES** List of desired namespaces
-* **K8S_DEFAULT_NAMESPACE** Default namespace if namespace is not informed
+* **K8S_DEFAULT_NAMESPACE** Default namespace
 * **GCP_HOSTNAME**
 * **GCP_PROJ_ID**
 * **GCP_LOCATION**
@@ -58,11 +56,12 @@ GCP_USER=<GCP service user>
 * **GCP_USER** GCP service user e.g. circleci-sa
 
 
-After the steps, simply check the installation with  `make check`
+After the steps, simply check the installation with  `./cli check`
 
 
 ## How to use
-`K8S_NAMESPACE=stag make deploy`
+`./cli deploy` Will deploy to K8S_DEFAULT_NAMESPACE
+`./cli deploy stag` Will deploy to stag namespace
 ...
 
 ## Folder structure

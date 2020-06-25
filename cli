@@ -23,12 +23,15 @@ Commands:
   exit 1
 }
 
-
-[ ! -f "$HOME/.kube-test.rc" ] \
-  && echo "ERROR: Can't find $HOME/.kube-test.rc, please create following README.md" \
-  && exit 1
-
 . $WORKDIR/ops/defaults.sh
+
+
+if [[ "" == $GCP_HOSTNAME ]]
+then
+  echo "ERROR: Can't find $HOME/.kube-test.rc, please create following README.md"
+  exit 1
+fi
+
 
 case "$1" in
   deploy)
