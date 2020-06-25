@@ -1,14 +1,17 @@
+name: Merge to Master
 on:
-  merge:
+  push:
     branches:
       - master
-  jobs:
-    test:
-      name: Build, test and push
-      runs-on: ubuntu-latest
-      steps:
-        - name: Install
-          shell: bash
-          env:
-            SUPER_SECRET: ${{ secrets.DORO }}
-          run: echo "HOLA"
+
+
+jobs:
+  test:
+    name: Build, test and push
+    runs-on: ubuntu-latest
+    steps:
+      - name: Install
+        shell: bash
+        env:
+          SUPER_SECRET: ${{ secrets.DORO }}
+        run: echo "HOLA"
