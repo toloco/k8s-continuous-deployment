@@ -6,7 +6,7 @@
 
 Boilerplate for Continuous deployment in Kubernetes
 ===================================================
-Boilerplate for continuous deployment in Kubernetes on GCP using Github and CircleCI
+Boilerplate for continuous deployment in Kubernetes on GCP using Github
 
 ## Setup
 The main 2 tools you need to use is `gcloud` to manage GCP services and `kubectl` which
@@ -26,12 +26,6 @@ Install instructions follow https://docs.docker.com/engine/install/
 
 #### [Optional] Install docker-compose
 Install instructions follow https://docs.docker.com/compose/install/
-
-
-#### [Optional] Install CircleCI devtools
-curl -fLSs https://raw.githubusercontent.com/CircleCI-Public/circleci-cli/master/install.sh | bash
-or with OSX brew `brew install circleci`
-And then setup your credentials `circleci setup`
 
 
 ### 2. Settings
@@ -60,7 +54,10 @@ After the steps, simply check the installation with  `./cli check`
 
 
 ## How to use
+`./cli help`
+
 `./cli deploy` Will deploy to K8S_DEFAULT_NAMESPACE
+
 `./cli deploy stag` Will deploy to stag namespace
 ...
 
@@ -97,15 +94,15 @@ And then configure **kubectl** with the desired cluster credentials
 - [X] Databases
 - [X] Load balancer
 - [X] Persistent volumens
-- [ ] Backups
+- [X] Github build
+- [X] Github deploy (by commit id)
+- [X] Delete and recreate cluster
+- [X] Check deploy credentials periodically
 - [X] Health checks
+- [X] Autocreate secrets
+- [ ] Backups
 - [ ] Customize deployments with kustomization tool
 - [ ] Upgrade with 0 downtime
 - [ ] Frontend
-- [X] Autocreate secrets
 - [ ] Configmaps
-- [X] Setup CircleCI
-- [ ] CircleCI build cache
-- [ ] Github triggers - circleCI
-- [X] Delete and recreate cluster
-- [X] Check deploy credentials periodically
+- [ ] Github build cache

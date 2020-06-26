@@ -4,8 +4,6 @@ volumes:
   rethinkdb:
 services:  
 
-#### CIRCLECI ##################################################################
-# docker:git
 #### DB ########################################################################
   athena-db:
     image: "postgres:12.2"
@@ -78,14 +76,3 @@ services:
     depends_on:
       - athena-db
 
-  app_prediction:
-    build:
-      context: app_prediction
-      dockerfile: build/app.Dockerfile
-    image: k8s/app_prediction
-    volumes:  
-      - ./app_prediction/src:/code/
-    ports:
-      - 8000:8000
-    environment:
-      - APP_NAME=prediction
