@@ -2,8 +2,8 @@ name: Continous integration
 on: [push]
 
 jobs:
-  push_to_registry:
-    name: Build, test and push
+  build_and_test:
+    name: Build and test
     runs-on: ubuntu-latest
     steps:
       - name: Check out the repo
