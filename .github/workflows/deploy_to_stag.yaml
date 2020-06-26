@@ -1,8 +1,12 @@
-on: [push]
+name: Deploy to stag
+on:
+  push:
+    branches:
+      - master
 
 jobs:
-  push_to_registry:
-    name: Build, test and push
+  test:
+    name: Deploy to Stag
     runs-on: ubuntu-latest
     steps:
       - name: Check out the repo
@@ -21,15 +25,11 @@ jobs:
           rm key.json
           gcloud auth configure-docker  --quiet > /dev/null
           ./cli check
-      - name: Build
+
+      - name: Build and push
         shell: bash
-        run: |
-          ./cli build && ./cli push
-      - name: Test
+        run: ./cli build && ./cli push
+        
+      - name: Deploy
         shell: bash
-        run: |
-          ./cli test
-      - name: Push
-        shell: bash
-        run: |
-          ./cli push
+        run: ./cli deploy stag
