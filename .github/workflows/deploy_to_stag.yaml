@@ -32,4 +32,4 @@ jobs:
         
       - name: Deploy
         shell: bash
-        run: ./cli deploy stag
+        run: ./cli deploy stag $GITHUB_SHA

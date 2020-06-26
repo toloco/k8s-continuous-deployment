@@ -7,7 +7,11 @@ do
     echo "Building images for $APP"
     for DC in ./$APP/build/*Dockerfile
     do
-        docker pull gcr.io/tolo-kubernetes/app_athena
-        docker build -f $DC --tag k8s/$APP $APP
+        docker pull $GCP_HOSTNAME/$GCP_PROJ_ID/$APP:latest
+        docker build \
+        -t $GCP_HOSTNAME/$GCP_PROJ_ID/$APP \
+        -f $DC \
+        --cache-from $GCP_HOSTNAME/$GCP_PROJ_ID/$APP \
+        ./$APP
     done 
 done

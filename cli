@@ -35,7 +35,7 @@ fi
 
 case "$1" in
   deploy)
-    "$WORKDIR/ops/deploy.sh" "$2" 
+    "$WORKDIR/ops/deploy.sh" "$2" "$3" 
     ;;
   namespace)
     "$WORKDIR/ops/namespace.sh" "$2" 

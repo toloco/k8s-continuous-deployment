@@ -17,7 +17,7 @@ WORKDIR /code
 #
 RUN pip install pipenv
 COPY ./src/Pipfile ./src/Pipfile.lock /code/
-RUN pipenv sync --dev
+RUN pipenv sync
 
 COPY ./src /code
 

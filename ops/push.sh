@@ -6,7 +6,7 @@
 
 
 cli_help() {
-  printf "${CCGREEN}push${CCEND} Build and push docker images to GCP registry.
+  printf "${CCGREEN}Push${CCEND} push all docker images to GCP registry.
 By default tags image with git commit id, if argument is passed all images are going to be tagged with it:
 cli push i-am-a-hash
 "
@@ -20,7 +20,6 @@ cli push i-am-a-hash
 for APP in `find app_* -mindepth 0 -maxdepth 0 -type d`
 do
     echo "pushing $APP"
-    docker tag k8s/$APP $GCP_HOSTNAME/$GCP_PROJ_ID/$APP:$GITHUB_SHA
     docker push $GCP_HOSTNAME/$GCP_PROJ_ID/$APP:$GITHUB_SHA
 done
 
