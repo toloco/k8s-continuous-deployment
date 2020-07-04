@@ -1,7 +1,7 @@
 apiVersion: v1
 kind: ResourceQuota
 metadata:
-  name: dev-resources
+  name: prod-resources
 spec:
   hard:
     requests.cpu: "500Mi"

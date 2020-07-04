@@ -39,6 +39,7 @@ GCP_PROJ_ID=<GCP Project id>
 GCP_LOCATION=<gcp location>
 GCP_CA_JSON=<GCP service token>
 GCP_USER=<GCP service user>
+GCP_KLUSTER_NAME=<kubernetes-test>
 ```
 
 * **K8S_NAMESPACES** List of desired namespaces
@@ -46,8 +47,10 @@ GCP_USER=<GCP service user>
 * **GCP_HOSTNAME**
 * **GCP_PROJ_ID**
 * **GCP_LOCATION**
+* **GCP_USER** GCP service user e.g. gcp-sa
+* **GCP_KLUSTER_NAME** GCP Kubernetes kluster name
 * **GCP_CA_JSON** Base64 encoded GCP Json certificate for service user
-* **GCP_USER** GCP service user e.g. circleci-sa
+
 
 
 After the steps, simply check the installation with  `./cli check`
@@ -100,9 +103,9 @@ And then configure **kubectl** with the desired cluster credentials
 - [X] Check deploy credentials periodically
 - [X] Health checks
 - [X] Autocreate secrets
-- [ ] Backups
 - [ ] Customize deployments with kustomization tool
-- [ ] Upgrade with 0 downtime
+- [ ] Backups
+- [ ] Performing a Rolling Update (zero downtime)
 - [ ] Frontend
 - [ ] Configmaps
 - [ ] Github build cache

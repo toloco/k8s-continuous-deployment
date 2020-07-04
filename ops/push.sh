@@ -17,10 +17,15 @@ cli push i-am-a-hash
     && cli_help && exit 0
 
 
+GIT_SHA=${GITHUB_SHA:=$1}
+[[ -z $GIT_SHA ]] && printf "${CCRED}Need to provide a tag ${CCEND}\n" && exit 1
+
+
 for APP in `find app_* -mindepth 0 -maxdepth 0 -type d`
 do
     echo "pushing $APP"
-    docker push $GCP_HOSTNAME/$GCP_PROJ_ID/$APP:$GITHUB_SHA
+    docker tag $GCP_HOSTNAME/$GCP_PROJ_ID/$APP $GCP_HOSTNAME/$GCP_PROJ_ID/$APP:$GIT_SHA
+    docker push $GCP_HOSTNAME/$GCP_PROJ_ID/$APP:$GIT_SHA
 done
 
 # List images

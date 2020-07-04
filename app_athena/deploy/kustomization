@@ -9,3 +9,12 @@ generatorOptions:
     type: generated
   annotations:
     note: generated
+
+apiVersion: kustomize.config.k8s.io/v1beta1
+kind: Kustomization
+images:
+  - name: nginx # match images with this name
+    newTag: 1.8.0 # override the tag
+    newName: nginx-special # override the name
+resources:
+- deployment.yaml
