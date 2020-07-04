@@ -1,8 +1,6 @@
 #!/usr/bin/env bash
 . $WORKDIR/ops/defaults.sh
 
-check_env "local"
-
 # Check context
 . $WORKDIR/ops/set_context.sh
 

@@ -18,7 +18,9 @@ cli_help() {
 . $WORKDIR/ops/set_context.sh
 
 K8S_NAMESPACE=${1:-$K8S_NAMESPACE}
-TAG=${2:-latest}
+TAG=${GITHUB_SHA:=$2}
+
+[[ -z $TAG ]] && printf "${CCRED}Need to provide a tag ${CCEND}\n" && exit 1
 
 
 printf "${CCGREEN}DEPLOYING TO ${K8S_NAMESPACE} TAG ${TAG} ${CCEND}\n"

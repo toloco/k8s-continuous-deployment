@@ -100,9 +100,9 @@ And then configure **kubectl** with the desired cluster credentials
 - [X] Check deploy credentials periodically
 - [X] Health checks
 - [X] Autocreate secrets
-- [ ] Backups
 - [ ] Customize deployments with kustomization tool
-- [ ] Upgrade with 0 downtime
+- [ ] Backups
+- [ ] Performing a Rolling Update (zero downtime)
 - [ ] Frontend
 - [ ] Configmaps
 - [ ] Github build cache

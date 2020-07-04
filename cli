@@ -17,7 +17,6 @@ Commands:
   ${CCGREEN}test${CCEND}       Run CI tests
   ${CCGREEN}push${CCEND}       Build and push docker images to GCP registry
   ${CCGREEN}check${CCEND}      Checks you can run the makefile
-  ${CCGREEN}run-ci${CCEND}     Run CircleCI locally
   ${CCGREEN}help${CCEND}       Print help
 "
   exit 1
@@ -44,16 +43,13 @@ case "$1" in
     "$WORKDIR/ops/build.sh" "$2" 
     ;;
   test)
-    "$WORKDIR/ops/test.sh" "$2" 
+    "$WORKDIR/ops/test.sh" "$2" "$3" 
     ;;
   push)
     "$WORKDIR/ops/push.sh" "$2" 
     ;;
   check)
     "$WORKDIR/ops/check.sh" "$2" 
-    ;;
-  run-ci)
-    "$WORKDIR/ops/run_ci.sh" "$2" 
     ;;
   *)
     cli_help

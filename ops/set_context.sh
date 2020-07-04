@@ -3,14 +3,14 @@
 
 
 
-if [[ "true" == $CircleCI ]]
+if [[ "true" == $CI ]]
 then
     echo $GCP_CA_JSON | base64 -d > key.json && \
     gcloud auth activate-service-account \
         "$GCP_USER@$GCP_PROJ_ID.iam.gserviceaccount.com" --key-file=key.json && \
     rm key.json
     echo $GCP_CA_JSON | base64 -d  | docker login -u _json_key \
-    --password-stdin https://$GCP_HOSTNAME 2> /dev/
+    --password-stdin https://$GCP_HOSTNAME 2> /dev/null
 else
     gcloud config set account $GCP_USER@$GCP_PROJ_ID.iam.gserviceaccount.com
 fi

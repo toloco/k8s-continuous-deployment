@@ -28,7 +28,7 @@ jobs:
 
       - name: Build and push
         shell: bash
-        run: ./cli build && ./cli push
+        run: ./cli build && ./cli push $GITHUB_SHA
         
       - name: Deploy
         shell: bash
