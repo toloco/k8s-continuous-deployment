@@ -34,22 +34,22 @@ fi
 
 case "$1" in
   deploy)
-    "$WORKDIR/ops/deploy.sh" "$2" "$3" 
+    "$WORKDIR/ops/deploy.sh" "$2" "$3" "$4" 
     ;;
   namespace)
-    "$WORKDIR/ops/namespace.sh" "$2" 
+    "$WORKDIR/ops/namespace.sh"  "$2" "$3" "$4" 
     ;;
   build)
-    "$WORKDIR/ops/build.sh" "$2" 
+    "$WORKDIR/ops/build.sh"  "$2" "$3" "$4" 
     ;;
   test)
-    "$WORKDIR/ops/test.sh" "$2" "$3" 
+    "$WORKDIR/ops/test.sh"  "$2" "$3" "$4" 
     ;;
   push)
-    "$WORKDIR/ops/push.sh" "$2" 
+    "$WORKDIR/ops/push.sh"  "$2" "$3" "$4" 
     ;;
   check)
-    "$WORKDIR/ops/check.sh" "$2" 
+    "$WORKDIR/ops/check.sh"  "$2" "$3" "$4" 
     ;;
   *)
     cli_help
