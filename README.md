@@ -1,12 +1,11 @@
-[![GitHub issues](https://img.shields.io/github/issues/toloco/k8s-continuous-deployment?style=flat-square&message=ON)](https://github.com/toloco/k8s-continuous-deployment/issues)
-
-
-[![Kubernetes](http://img.shields.io/static/v1?label=Kubernetes&color=green&style=flat-square&logo=kubernetes&message=ON)](https://kubernetes.io/)
-
-
 Boilerplate for Continuous deployment in Kubernetes
 ===================================================
-Boilerplate for continuous deployment in Kubernetes on GCP using Github
+Boilerplate for continuous deployment in Kubernetes<img height="26" width="26" src="https://cdn.jsdelivr.net/npm/simple-icons@v2/icons/kubernetes.svg" />
+on GCP<img height="26" width="26" src="https://cdn.jsdelivr.net/npm/simple-icons@v2/icons/github.svg" />
+using Github<img height="26" width="26" src="https://cdn.jsdelivr.net/npm/simple-icons@v2/icons/googlecloud.svg" />
+
+
+
 
 ## Setup
 The main 2 tools you need to use is `gcloud` to manage GCP services and `kubectl` which
@@ -67,10 +66,12 @@ After the steps, simply check the installation with  `./cli check`
 ## Folder structure
 All folders prefixed by **app_** are considered Kubernetes Apps, which for an easier management
 forces to have a particular structure.
+```
 app_xxx
   |_> build: all dockerfiles
   |_> deploy: all kubernetes configuration files, including databases, services, etc
 ...
+```
 
 
 ## Troubleshouting
@@ -83,29 +84,3 @@ Use `gcloud container clusters list` to get the list of clusters available at yo
 And then configure **kubectl** with the desired cluster credentials
 `gcloud container clusters get-credentials <CLUSTER NAME> --zone <ZONE>`
 
-
-
-
-## TODO:
-- [X] Create multiple services connected with nginx
-- [X] Expose nginx to the Internet
-- [X] Makefile with build/push images
-- [X] Makefile deploy services
-- [X] Makefile create namespaces
-- [X] Namespace deployments
-- [X] Quotas for namespaces
-- [X] Databases
-- [X] Load balancer
-- [X] Persistent volumens
-- [X] Github build
-- [X] Github deploy (by commit id)
-- [X] Delete and recreate cluster
-- [X] Check deploy credentials periodically
-- [X] Health checks
-- [X] Autocreate secrets
-- [ ] Customize deployments with kustomization tool
-- [ ] Backups
-- [ ] Performing a Rolling Update (zero downtime)
-- [ ] Frontend
-- [ ] Configmaps
-- [ ] Github build cache

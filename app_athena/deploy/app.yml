@@ -10,7 +10,7 @@ spec:
     spec:
       containers:
       - name: athena-api
-        image: gcr.io/tolo-kubernetes/app_athena
+        image: XXXX
         imagePullPolicy: Always
         ports: [{containerPort: 8000, name: "app-http"}]
         env: [

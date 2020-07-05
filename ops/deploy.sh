@@ -13,22 +13,22 @@ cli_help() {
  exit 0 
 }
 
+[[ "help" == $1 ]] && cli_help && exit 0
+
+
 deploy_app(){
     K8S_NAMESPACE=$1
     APP=$2
     GIT_SHA=$3
 
-    printf "${CCBLUE}deploying $APP ${CCEND}\n"
+    # printf "${CCBLUE}deploying $APP ${CCEND}\n"
 
-    [[ -f $APP/deploy/kustomization ]] && kubectl -n $K8S_NAMESPACE apply -k $APP/deploy
+    [[ -f $APP/deploy/kustomization ]] && kubectl -n $K8S_NAMESPACE -k $APP/deploy --dry-run -o yaml
     
-    kubectl -n $K8S_NAMESPACE apply -f $APP/deploy/§
+    # kubectl -n $K8S_NAMESPACE apply -f $APP/deploy/
 
-    printf "${CCGREEN}OK${CCEND}\n"
+    # printf "${CCGREEN}OK${CCEND}\n"
 }
-
-
-[[ "help" == $1 ]] && cli_help && exit 0
 
 # Check context
 . $WORKDIR/ops/set_context.sh
@@ -51,4 +51,5 @@ else
     deploy_app $K8S_NAMESPACE $3 $TAG
 fi
 
-kubectl -n $K8S_NAMESPACE get all
+# Fetch deployment status
+# kubectl -n $K8S_NAMESPACE get all
